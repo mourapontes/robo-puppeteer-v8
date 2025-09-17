@@ -1,0 +1,17 @@
+# Ignorar dependências e builds
+node_modules/
+dist/
+puppeteer_profile/
+*.log
+*.tmp
+
+# Ignorar arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Ignorar arquivos de configuração do editor
+.vscode/
+
+# Ignorar clones temporários usados na limpeza
+robo-puppeteer-v8.git/
+robo-puppeteer-v8/
