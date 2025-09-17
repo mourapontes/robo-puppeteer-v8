@@ -1,0 +1,44 @@
+{
+  "name": "robo-aulas-app",
+  "version": "1.0.0",
+  "description": "Um robô de automação para preenchimento de aulas.",
+  "main": "main.js",
+  "author": "Rangel Pontes",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder"
+  },
+  "dependencies": {
+    "puppeteer-core": "^21.5.2"
+  },
+  "devDependencies": {
+    "electron": "^27.1.2",
+    "electron-builder": "^24.9.1"
+  },
+  "build": {
+    "appId": "com.rangelpontes.roboaulas",
+    "productName": "Robo de Aulas",
+    "files": [
+      "main.js",
+      "preload.js",
+      "robot.js",
+      "index.html",
+      "renderer.js",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "icon.ico",
+      "uninstallerIcon": "icon.ico"
+    },
+    "linux": {
+      "target": ["deb"],
+      "category": "Utility"
+    }
+  }
+}

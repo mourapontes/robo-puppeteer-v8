@@ -1,0 +1,51 @@
+name: Release Linux (.deb)
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Instalar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Instalar dependências do sistema
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgtk-3-0 libnss3 libxss1 libasound2 \
+            libxkbcommon0 libxrandr2 libdrm2 libgbm1 libxext6 libxfixes3 \
+            libxdamage1 libxcomposite1 libcups2 libxcb1 libx11-xcb1 \
+            ca-certificates fakeroot rpm xz-utils
+
+      - name: Instalar dependências do projeto
+        run: npm install
+
+      - name: Gerar instalador .deb
+        run: npm run dist
+
+      - name: Upload artefato (CI)
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-dist
+          path: |
+            dist/**
+
+      - name: Criar Release e anexar .deb
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*.deb
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
