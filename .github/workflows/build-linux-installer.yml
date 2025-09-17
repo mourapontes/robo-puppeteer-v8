@@ -1,16 +1,15 @@
-name: Release Linux (.deb)
+name: Build Linux Installer
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - main
+      - master
   workflow_dispatch:
 
 jobs:
-  build-and-release:
+  build-linux-deb:
     runs-on: ubuntu-22.04
-    permissions:
-      contents: write
     steps:
       - name: Checkout código
         uses: actions/checkout@v4
@@ -29,7 +28,13 @@ jobs:
             libxdamage1 libxcomposite1 libcups2 libxcb1 libx11-xcb1 \
             libatk-bridge2.0-0 libatspi2.0-0 fonts-liberation \
             ca-certificates fakeroot rpm xz-utils
-          sudo apt-get install -y libasound2t64 liboss4-salsa-asound2
+          # Detecta pacote correto de áudio: libasound2t64 (Ubuntu 24.04+) ou libasound2 (Ubuntu 22.04)
+          if apt-cache show libasound2t64 > /dev/null 2>&1; then
+            sudo apt-get install -y libasound2t64;
+          else
+            sudo apt-get install -y libasound2;
+          fi
+          
 
       - name: Instalar dependências do projeto
         run: npm install
@@ -37,18 +42,9 @@ jobs:
       - name: Gerar instalador .deb
         run: npm run dist
 
-      - name: Upload artefato (CI)
+      - name: Publicar artefato
         uses: actions/upload-artifact@v4
         with:
           name: linux-dist
           path: |
             dist/**
-
-      - name: Criar Release e anexar .deb
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            dist/*.deb
-          generate_release_notes: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
