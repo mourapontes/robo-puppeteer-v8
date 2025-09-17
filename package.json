@@ -19,12 +19,12 @@
     "appId": "com.rangelpontes.roboaulas",
     "productName": "Robo de Aulas",
     "files": [
-      "main.js",
-      "preload.js",
-      "robot.js",
-      "index.html",
-      "renderer.js",
-      "package.json"
+      "**/*",
+      "!dist/**",
+      "!.github/**",
+      "!puppeteer_profile/**",
+      "!.vscode/**",
+      "!**/*.log"
     ],
     "win": {
       "target": "nsis",
