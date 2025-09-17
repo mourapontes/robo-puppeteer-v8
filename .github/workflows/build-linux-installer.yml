@@ -41,7 +41,9 @@ jobs:
         run: npm install
 
       - name: Gerar instalador .deb
-        run: npm run dist
+        run: |
+          npx electron-builder --version
+          DEBUG=electron-builder npx electron-builder --linux deb --publish never
 
       - name: Publicar artefato
         uses: actions/upload-artifact@v4
